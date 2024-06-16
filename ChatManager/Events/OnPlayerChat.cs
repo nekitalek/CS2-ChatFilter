@@ -24,16 +24,6 @@ public class OnPlayerChat
         string deadStatus = "";
         string playerTeam = "";
         string playerName = player.PlayerName;
-            
-        if (player.TeamNum == 1)
-        {
-            playerTeam = Utils.Helpers.setTeamName(player.TeamNum);
-        }
-        else
-        {
-            if (ChatManager._config != null)
-                deadStatus = !player.PawnIsAlive ? ChatManager._config.TeamTags.DeadSyntax : "";
-        }
 
         if (ChatManager._config != null && ChatManager._config.GeneralSettings.AdBlockingOnChatAndPlayerNames)
         {
@@ -51,109 +41,6 @@ public class OnPlayerChat
             {
                 Server.NextFrame(() => Discord.Send(player, message, "Message"));
             });  
-        }
-
-        if (ChatManager._config != null && ChatManager._config.Tags.Any())
-        {
-            
-            foreach (var tag in ChatManager._config.Tags)
-            {
-                
-                if (tag.Key.Contains(steamId))
-                {
-
-                    string prefix = tag.Value;
-                    
-                    var replace = $"\u200e{ChatManager._config.ChatSyntax.AllSyntax}"
-                        .Replace("{STATUS_DEAD}", deadStatus)
-                        .Replace("{PLAYER_NAME}", $"{prefix}{playerName}")
-                        .Replace("{PLAYER_MESSAGE}", message)
-                        .Replace("{PLAYER_TEAM}", playerTeam);
-                    
-                    Server.PrintToChatAll(Colors.Tags(replace));
-                    return HookResult.Handled;
-
-                }
-                
-                if (tag.Key.StartsWith("#"))
-                {
-
-                    string group = tag.Key;
-                    bool hasPermission = AdminManager.PlayerInGroup(player, group);
-
-                    if (hasPermission)
-                    {
-                        
-                        string prefix = tag.Value;
-                    
-                        var replace = $"\u200e{ChatManager._config.ChatSyntax.AllSyntax}"
-                            .Replace("{STATUS_DEAD}", deadStatus)
-                            .Replace("{PLAYER_NAME}", $"{prefix}{playerName}")
-                            .Replace("{PLAYER_MESSAGE}", message)
-                            .Replace("{PLAYER_TEAM}", playerTeam);
-                    
-                        Server.PrintToChatAll(Colors.Tags(replace));
-                        return HookResult.Handled;
-                        
-                    }
-
-                }
-
-                if (tag.Key.StartsWith("@"))
-                {
-
-                    string permission = tag.Key;
-                    bool hasPermission = AdminManager.PlayerHasPermissions(player, permission);
-
-                    if (hasPermission)
-                    {
-                        
-                        string prefix = tag.Value;
-                    
-                        var replace = $"\u200e{ChatManager._config.ChatSyntax.AllSyntax}"
-                            .Replace("{STATUS_DEAD}", deadStatus)
-                            .Replace("{PLAYER_NAME}", $"{prefix}{playerName}")
-                            .Replace("{PLAYER_MESSAGE}", message)
-                            .Replace("{PLAYER_TEAM}", playerTeam);
-                    
-                        Server.PrintToChatAll(Colors.Tags(replace));
-                        return HookResult.Handled;
-                        
-                    }
-
-                }
-                
-                if (tag.Key.Contains("everyone"))
-                {
-
-                    string prefix = tag.Value;
-                    
-                    var replace = $"\u200e{ChatManager._config.ChatSyntax.AllSyntax}"
-                        .Replace("{STATUS_DEAD}", deadStatus)
-                        .Replace("{PLAYER_NAME}", $"{prefix}{playerName}")
-                        .Replace("{PLAYER_MESSAGE}", message)
-                        .Replace("{PLAYER_TEAM}", playerTeam);
-                    
-                    Server.PrintToChatAll(Colors.Tags(replace));
-                    return HookResult.Handled;
-
-                }
-                
-            }
-
-        }
-        else
-        {
-                    
-            var replace = $"\u200e{ChatManager._config?.ChatSyntax.AllSyntax}"
-                .Replace("{STATUS_DEAD}", deadStatus)
-                .Replace("{PLAYER_NAME}", $"{playerName}")
-                .Replace("{PLAYER_MESSAGE}", message)
-                .Replace("{PLAYER_TEAM}", playerTeam);
-                    
-            Server.PrintToChatAll(Colors.Tags(replace));
-            return HookResult.Handled;
-            
         }
         
         return HookResult.Continue;
