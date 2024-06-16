@@ -21,24 +21,6 @@ public class OnPlayerChat
 
         string steamId = new SteamID(player.SteamID).SteamId64.ToString();
         
-        if (message.StartsWith("!") || message.StartsWith("/"))
-        {
-            if ((bool)ChatManager._config?.GeneralSettings.LoggingCommands)
-            {
-                Task.Run(() =>
-                {
-                    Server.NextFrame(() => Discord.Send(player, message, "Command"));
-                });  
-            }
-            return HookResult.Continue;
-        }
-
-        if (MuteManager.IsPlayerMuted(player))
-        {
-            player.PrintToChat(Colors.Tags($"\u200e{ChatColors.Purple}{ChatManager._config?.GeneralSettings.Prefix} {ChatColors.Darkred}{ChatManager._config?.Messages.CanNotSendMessage}"));
-            return HookResult.Handled;
-        }
-        
         string deadStatus = "";
         string playerTeam = "";
         string playerName = player.PlayerName;

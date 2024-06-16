@@ -21,28 +21,12 @@ public class OnPlayerTeamChat
 
         string steamId = new SteamID(player.SteamID).SteamId64.ToString();
         
-        if (message.StartsWith("!") || message.StartsWith("/"))
-        {
-            if ((bool)ChatManager._config?.GeneralSettings.LoggingCommands)
-            {
-                Task.Run(() =>
-                {
-                    Server.NextFrame(() => Discord.Send(player, message, "Command"));
-                });  
-            }
-            return HookResult.Continue;
-        }
-
-        if (MuteManager.IsPlayerMuted(player))
-        {
-            player.PrintToChat(Colors.Tags($"\u200e{ChatColors.Purple}{ChatManager._config?.GeneralSettings.Prefix} {ChatColors.Darkred}{ChatManager._config?.Messages.CanNotSendMessage}"));
-            return HookResult.Handled;
-        }
-        
         string deadStatus = !player.PawnIsAlive ? ChatManager._config.TeamTags.DeadSyntax : "";
         string playerTeam = Utils.Helpers.setTeamName(player.TeamNum);
         string playerName = player.PlayerName;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         string teamMessage = $"\u200e{ChatManager._config.ChatSyntax.AllSyntax}";
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
         if (player.TeamNum == 2)
         {

@@ -1,6 +1,5 @@
 ﻿using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
-using static ChatManager.MuteManager;
 using Helpers = ChatManager.Utils.Helpers;
 
 namespace ChatManager;
@@ -9,10 +8,9 @@ namespace ChatManager;
 public sealed class ChatManager : BasePlugin, IPluginConfig<Config>
 {
 
-    public override string ModuleName => "ChatManager";
-    public override string ModuleAuthor => "BMathers";
-    public override string ModuleVersion => "1.1.5";
-    public static List<MutedPlayer>? MutedPlayers { get; private set; }
+    public override string ModuleName => "ChatFilter";
+    public override string ModuleAuthor => "yachty";
+    public override string ModuleVersion => "1.0.0";
     private int ModuleConfigVersion => 2;
     public required Config Config { get; set; }
     public static string? _moduleDirectory;
@@ -22,34 +20,15 @@ public sealed class ChatManager : BasePlugin, IPluginConfig<Config>
     {
         
         base.Load(hotReload);
-        
-        Console.WriteLine(" ");
-        Console.WriteLine("   _____ _           _   __  __                                   ");
-        Console.WriteLine("  / ____| |         | | |  \\/  |                                  ");
-        Console.WriteLine(" | |    | |__   __ _| |_| \\  / | __ _ _ __   __ _  __ _  ___ _ __ ");
-        Console.WriteLine(" | |    | '_ \\ / _` | __| |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ \\ '__|");
-        Console.WriteLine(" | |____| | | | (_| | |_| |  | | (_| | | | | (_| | (_| |  __/ |   ");
-        Console.WriteLine("  \\_____|_| |_|\\__,_|\\__|_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_|   ");
-        Console.WriteLine("                                                   __/ |          ");
-        Console.WriteLine("                                                  |___/           ");
+        Console.WriteLine("            Chat filter                       ");
         Console.WriteLine("			>> Version: " + ModuleVersion);
         Console.WriteLine("			>> Author: " + ModuleAuthor);
         Console.WriteLine(" ");
         
-        MutedPlayers = MuteManagerLoader(ModuleDirectory);
         _moduleDirectory = ModuleDirectory;
         
         AddCommandListener("say", Events.OnPlayerChat.Run);
         AddCommandListener("say_team", Events.OnPlayerTeamChat.Run);
-        
-        AddCommand($"css_{Config.GeneralSettings.MuteCommand}", "Mute a player.", Commands.Mute.Command);
-        AddCommand($"css_{Config.GeneralSettings.UnmuteCommand}", "Unmute a player.", Commands.Unmute.Command);
-        
-        while (true)
-        {
-            CheckMutedPlayers();
-            await Task.Delay(30000);
-        }
 
     }
     
