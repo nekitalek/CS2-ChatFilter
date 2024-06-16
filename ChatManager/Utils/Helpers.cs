@@ -81,7 +81,7 @@ public class Helpers
 
         // Объединение всех регулярных выражений в один список
         List<string> patterns = new List<string>
-    {
+        {
         ipRegexPattern,
         generalUrlPattern,
         neverlosePattern,
@@ -94,12 +94,12 @@ public class Helpers
         partialMarketPattern,
         partialItemPattern,
         partialIdPattern
-    };
+        };
 
         // Применение всех регулярных выражений к строке target
         foreach (var pattern in patterns)
         {
-            target = Regex.Replace(target, pattern, "****", RegexOptions.IgnoreCase);
+            target = Regex.Replace(target, pattern, "", RegexOptions.IgnoreCase);
         }
 
         return target;
